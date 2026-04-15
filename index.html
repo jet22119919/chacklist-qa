@@ -133,6 +133,7 @@ button {
 .ranking li {
   margin: 6px 0;
 }
+
 </style>
 </head>
 
@@ -151,25 +152,35 @@ button {
 
 <input id="project" placeholder="Nombre del proyecto">
 
-<!-- CATEGORÍAS -->
+<select id="asignado">
+  <option value="">¿Quién hizo este proyecto?</option>
+  <option>Jess</option>
+  <option>QA</option>
+  <option>Joss Diseñadora</option>
+</select>
+
 <div class="categories">
   <div class="cat-btn active" data-cat="Elementos gráficos">Gráficos</div>
   <div class="cat-btn" data-cat="Prototipos">Prototipos</div>
   <div class="cat-btn" data-cat="Indicaciones">Indicaciones</div>
 </div>
 
-<!-- PROGRESO -->
 <div class="progress-bar">
   <div class="progress-fill" id="progress"></div>
 </div>
 <div class="score" id="score">0%</div>
 
-<!-- CHECKLIST -->
 <div id="checklist"></div>
 
-<button onclick="guardar()">Aprobar checklist</button>
+<div id="liderTools" style="display:none;">
+  <textarea id="observaciones" placeholder="Observaciones"></textarea>
 
-<!-- DASHBOARD -->
+  <input type="file" id="screenshot" multiple>
+  <div id="preview"></div>
+</div>
+
+<button onclick="guardar()">Enviar</button>
+
 <div class="dashboard">
   <h3>📊 Proyectos</h3>
   <div id="projects"></div>
@@ -180,36 +191,63 @@ button {
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
 <script>
+(function(){
+  emailjs.init("_v8Luk56bzfinD770");
+})();
+
 const API_CHECKLIST = "https://sheetdb.io/api/v1/4myrrapuo10e9?sheet=checklist_base";
 const API_REGISTROS = "https://sheetdb.io/api/v1/4myrrapuo10e9?sheet=registros";
 
+const userEmails = {
+  "Jess": "jessica@abeha.mx",
+  "QA": "harum@abeha.mx",
+  "Joss Diseñadora": "joselyn@abeha.mx"
+};
+
 let checklistData = [];
 let activeCats = ["Elementos gráficos"];
+let screenshots = [];
 
-/* RENDER */
+document.getElementById("user").addEventListener("change", function() {
+  document.getElementById("liderTools").style.display =
+    this.value === "Joss" ? "block" : "none";
+});
+
+document.getElementById("screenshot").addEventListener("change", function(e) {
+  const files = Array.from(e.target.files);
+  screenshots = [];
+
+  const preview = document.getElementById("preview");
+  preview.innerHTML = "";
+
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      screenshots.push(event.target.result);
+      preview.innerHTML += `<img src="${event.target.result}" style="max-width:100px; margin:5px;">`;
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
 function renderChecklist() {
   const container = document.getElementById("checklist");
   container.innerHTML = "";
 
-  const filtered = checklistData.filter(item =>
-    activeCats.includes(item.categoria)
-  );
+  checklistData
+    .filter(item => activeCats.includes(item.categoria))
+    .forEach(item => {
+      container.innerHTML += `
+        <label class="item">
+          <input type="checkbox">
+          <span>${item.item}</span>
+        </label>
+      `;
+    });
 
-  filtered.forEach(item => {
-    container.innerHTML += `
-      <label class="item">
-        <input type="checkbox">
-        ${item.item}
-      </label>
-    `;
-  });
-
-  addListeners();
-}
-
-/* PROGRESS */
-function addListeners() {
   document.querySelectorAll("input[type=checkbox]").forEach(cb => {
     cb.addEventListener("change", updateProgress);
   });
@@ -218,37 +256,42 @@ function addListeners() {
 function updateProgress() {
   const total = document.querySelectorAll("input[type=checkbox]").length;
   const checked = document.querySelectorAll("input[type=checkbox]:checked").length;
-
-  const percent = total === 0 ? 0 : Math.round((checked / total) * 100);
+  const percent = Math.round((checked / total) * 100);
 
   document.getElementById("progress").style.width = percent + "%";
   document.getElementById("score").textContent = percent + "%";
 }
 
-/* CATEGORÍAS CLICK */
 document.querySelectorAll(".cat-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     btn.classList.toggle("active");
-
     const cat = btn.dataset.cat;
 
-    if (activeCats.includes(cat)) {
-      activeCats = activeCats.filter(c => c !== cat);
-    } else {
-      activeCats.push(cat);
-    }
+    activeCats = activeCats.includes(cat)
+      ? activeCats.filter(c => c !== cat)
+      : [...activeCats, cat];
 
     renderChecklist();
   });
 });
 
-/* GUARDAR */
 function guardar() {
   const user = document.getElementById("user").value;
   const project = document.getElementById("project").value;
+  const asignado = document.getElementById("asignado").value;
+
+  const observacionesEl = document.getElementById("observaciones");
+  const observaciones = observacionesEl ? observacionesEl.value : "";
+
+  const isLider = user === "Joss";
 
   if (!user || !project) {
-    alert("Selecciona usuario y proyecto");
+    alert("Completa usuario y proyecto");
+    return;
+  }
+
+  if (isLider && !asignado) {
+    alert("Selecciona quién hizo el proyecto");
     return;
   }
 
@@ -256,15 +299,42 @@ function guardar() {
   const checked = document.querySelectorAll("input[type=checkbox]:checked").length;
   const percent = Math.round((checked / total) * 100);
 
-  if (percent < 80) {
-    alert("Checklist incompleto ❌");
+  if (!isLider && percent < 80) {
+    alert("Completa el checklist");
     return;
   }
 
-  const estado =
-    percent >= 80 ? "aprobado" :
-    percent >= 50 ? "revision" :
-    "pendiente";
+  if (isLider && !observaciones) {
+    alert("Agrega observaciones");
+    return;
+  }
+
+  const correo = userEmails[asignado];
+
+  if (isLider && !correo) {
+    alert("No se encontró el correo");
+    return;
+  }
+
+  if (isLider) {
+    const imagesHTML = screenshots.map(img =>
+      `<img src="${img}" style="max-width:100%; margin:10px 0;">`
+    ).join("");
+
+emailjs.send("service_akaao78", "template_riaojci", {
+  to_email: "joselyn@abeha.mx",
+  user: "TEST",
+  percent: "90",
+  observaciones: "Prueba",
+  images: "IMG TEST"
+})
+.then(res => {
+  console.log("OK", res);
+})
+.catch(err => {
+  console.error("ERROR REAL:", err);
+});
+  }
 
   fetch(API_REGISTROS, {
     method: "POST",
@@ -273,60 +343,46 @@ function guardar() {
       data: [{
         usuario: user,
         proyecto: project,
-        puntos: checked,
         porcentaje: percent,
-        categorias_usadas: activeCats.join(", "),
-        estado: estado,
-        fecha: new Date().toISOString()
+        observaciones: observaciones,
+        screenshots: JSON.stringify(screenshots)
       }]
     })
   })
   .then(() => {
     alert("Guardado ✅");
+    if (observacionesEl) observacionesEl.value = "";
+    document.getElementById("preview").innerHTML = "";
     cargarDashboard();
   });
 }
 
-/* DASHBOARD */
 function cargarDashboard() {
   fetch(API_REGISTROS)
     .then(res => res.json())
     .then(data => {
-
       const container = document.getElementById("projects");
       container.innerHTML = "";
 
       data.forEach(row => {
+        const imgs = row.screenshots ? JSON.parse(row.screenshots) : [];
+
+        const imagesHTML = imgs.map(img =>
+          `<img src="${img}" style="max-width:100px; margin:5px;">`
+        ).join("");
+
         container.innerHTML += `
-          <div class="card ${row.estado}">
+          <div class="card">
             <strong>${row.proyecto}</strong><br>
-            ${row.usuario} - ${row.porcentaje}%
+            ${row.usuario} - ${row.porcentaje}%<br>
+            <small>${row.observaciones || ""}</small>
+            <div>${imagesHTML}</div>
           </div>
         `;
-      });
-
-      const ranking = {};
-
-      data.forEach(row => {
-        if (row.porcentaje >= 80) {
-          if (!ranking[row.usuario]) ranking[row.usuario] = 0;
-          ranking[row.usuario]++;
-        }
-      });
-
-      const sorted = Object.entries(ranking)
-        .sort((a, b) => b[1] - a[1]);
-
-      const ul = document.getElementById("ranking");
-      ul.innerHTML = "";
-
-      sorted.forEach(([name, score]) => {
-        ul.innerHTML += `<li>${name}: ${score} aprobados</li>`;
       });
     });
 }
 
-/* INIT */
 fetch(API_CHECKLIST)
   .then(res => res.json())
   .then(data => {
