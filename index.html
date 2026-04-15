@@ -295,10 +295,11 @@ button {
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-emailjs.init("_v8Luk56bzfinD770");
+emailjs.init({
+  publicKey: "Nse9u3UgQUkQK-iNP"
+});
 
 const API_CHECKLIST="https://sheetdb.io/api/v1/4myrrapuo10e9?sheet=checklist_base";
 const API_REGISTROS="https://sheetdb.io/api/v1/4myrrapuo10e9?sheet=registros";
