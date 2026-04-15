@@ -322,17 +322,19 @@ function guardar() {
     ).join("");
 
 emailjs.send("service_akaao78", "template_riaojci", {
-  to_email: "joselyn@abeha.mx",
-  user: "TEST",
-  percent: "90",
-  observaciones: "Prueba",
-  images: "IMG TEST"
+  to_email: correo,
+  user: user || "Sin usuario",
+  percent: String(percent || 0),
+  observaciones: observaciones || "Sin observaciones",
+  images: imagesHTML || "Sin imágenes"
 })
 .then(res => {
-  console.log("OK", res);
+  console.log("Correo enviado ✅", res);
+  alert("Correo enviado ✉️");
 })
 .catch(err => {
-  console.error("ERROR REAL:", err);
+  console.error("ERROR REAL:", JSON.stringify(err));
+  alert("Error al enviar correo");
 });
   }
 
@@ -367,9 +369,9 @@ function cargarDashboard() {
       data.forEach(row => {
         const imgs = row.screenshots ? JSON.parse(row.screenshots) : [];
 
-        const imagesHTML = imgs.map(img =>
-          `<img src="${img}" style="max-width:100px; margin:5px;">`
-        ).join("");
+        const imagesHTML = screenshots.map(img =>
+  `<img src="${img}" style="max-width:100%; margin:10px 0; border-radius:6px;" />`
+).join("");
 
         container.innerHTML += `
           <div class="card">
