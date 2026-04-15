@@ -7,131 +7,215 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
+
+/* 🔥 BASE FIX */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --primary:#a18cd1;
+  --bg:#f6f6f9;
+  --card:#ffffff;
+  --text:#2d2d2d;
+  --muted:#888;
+}
+
 body {
-  font-family: 'Inter', sans-serif;
-  background: #efeff2;
-  padding: 30px;
-  color: #2d2d2d;
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  margin:0;
+  padding:20px;
+  color:var(--text);
 }
 
 .container {
-  max-width: 800px;
-  margin: auto;
+  max-width:900px;
+  margin:auto;
 }
 
-h2 {
-  font-weight: 600;
-  margin-bottom: 20px;
+/* HEADER */
+.header h2 { margin:0; }
+.header p { font-size:13px; color:var(--muted); }
+
+/* CARD */
+.card {
+  background:var(--card);
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 6px 25px rgba(0,0,0,0.05);
+  margin-bottom:20px;
 }
 
-select, input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
+/* GRID */
+.grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
 }
 
-/* CATEGORÍAS */
+/* INPUTS */
+input, select, textarea {
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #ddd;
+  font-size:14px;
+}
+
+/* CHECKBOX */
+input[type="checkbox"] {
+  width:18px;
+  height:18px;
+  flex-shrink:0;
+}
+
+/* CATEGORIES */
 .categories {
-  display: flex;
-  gap: 10px;
-  margin: 15px 0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:10px;
 }
 
 .cat-btn {
-  padding: 8px 14px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  background: white;
-  font-size: 14px;
+  padding:6px 12px;
+  border-radius:20px;
+  border:1px solid #ddd;
+  background:white;
+  cursor:pointer;
+  font-size:13px;
 }
 
 .cat-btn.active {
-  background: #a18cd1;
-  color: white;
-  border: none;
+  background:var(--primary);
+  color:white;
+  border:none;
 }
 
 /* PROGRESS */
 .progress-bar {
-  height: 6px;
-  background: #ddd;
-  border-radius: 10px;
-  margin-top: 10px;
+  height:6px;
+  background:#ddd;
+  border-radius:10px;
+  margin-top:10px;
 }
 
 .progress-fill {
-  height: 100%;
-  width: 0%;
-  background: #a18cd1;
-  border-radius: 10px;
-}
-
-.score {
-  text-align: right;
-  margin-top: 5px;
-  font-size: 14px;
+  height:100%;
+  width:0%;
+  background:var(--primary);
+  border-radius:10px;
 }
 
 /* CHECKLIST */
-.categoria {
-  margin-top: 30px;
-}
-
-.categoria h3 {
-  font-weight: 600;
-  margin-bottom: 15px;
-}
-
 .item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 10px;
-  transition: all 0.2s ease;
-  cursor: pointer;
+  display:flex;
+  gap:10px;
+  padding:12px;
+  border-radius:12px;
+  cursor:pointer;
 }
 
-.item:hover {
-  background: #e9e6f3;
+.item:hover { background:#f0ecfb; }
+.item:has(input:checked) { background:#e8e1fa; }
+
+/* OBS */
+.obs-box {
+  background:#f7f5fc;
+  border-left:4px solid var(--primary);
+  padding:14px;
+  border-radius:10px;
 }
 
-.item input {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
+/* IMAGES */
+#preview {
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:10px;
 }
 
-.item span {
-  flex: 1;
+#preview img {
+  width:70px;
+  height:70px;
+  object-fit:cover;
+  border-radius:8px;
 }
 
-.item:has(input:checked) {
-  background: #dcd6f7;
-}
-
-/* BOTÓN */
+/* BUTTON */
 button {
-  margin-top: 20px;
-  padding: 14px;
-  width: 100%;
-  background: #2d2d2d;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:var(--text);
+  color:white;
+  cursor:pointer;
 }
 
-/* RANKING */
-.ranking {
-  margin-top: 30px;
-}
+/* ========================= */
+/* 📱 MOBILE APP EXPERIENCE */
+/* ========================= */
 
-.ranking li {
-  margin: 6px 0;
+@media (max-width:768px){
+
+  body {
+    padding:0;
+  }
+
+  .container {
+    max-width:100%;
+    padding:16px;
+  }
+
+  .card {
+    padding:18px;
+    margin-bottom:16px;
+  }
+
+  .grid {
+    grid-template-columns:1fr;
+  }
+
+  input, select, textarea {
+    padding:14px;
+    font-size:16px;
+  }
+
+  .item {
+    padding:14px;
+    gap:12px;
+    align-items:flex-start;
+  }
+
+  .item span {
+    font-size:15px;
+    line-height:1.4;
+  }
+
+  input[type="checkbox"] {
+    width:20px;
+    height:20px;
+  }
+
+  .progress-bar {
+    height:8px;
+  }
+
+  textarea {
+    min-height:120px;
+  }
+
+  button {
+    position:sticky;
+    bottom:10px;
+    padding:16px;
+    font-size:16px;
+  }
+
 }
 
 </style>
@@ -141,52 +225,72 @@ button {
 
 <div class="container">
 
+<div class="header">
 <h2>QA Checklist</h2>
+<p>Revisión de calidad del proyecto</p>
+</div>
 
+<div class="card">
+
+<div class="grid">
+<div>
+<label>Usuario</label>
 <select id="user">
-  <option value="">Selecciona usuario</option>
-  <option>Joss</option>
-  <option>Jess</option>
-  <option>QA</option>
+<option value="">Selecciona</option>
+<option>Joss</option>
+<option>Jess</option>
+<option>QA</option>
 </select>
+</div>
 
-<input id="project" placeholder="Nombre del proyecto">
+<div>
+<label>Proyecto</label>
+<input id="project">
+</div>
+</div>
 
+<label>Responsable</label>
 <select id="asignado">
-  <option value="">¿Quién hizo este proyecto?</option>
-  <option>Jess</option>
-  <option>QA</option>
-  <option>Joss Diseñadora</option>
+<option value="">Selecciona</option>
+<option>Jess</option>
+<option>QA</option>
+<option>Joss Diseñadora</option>
 </select>
+
+</div>
+
+<div class="card">
 
 <div class="categories">
-  <div class="cat-btn active" data-cat="Elementos gráficos">Gráficos</div>
-  <div class="cat-btn" data-cat="Prototipos">Prototipos</div>
-  <div class="cat-btn" data-cat="Indicaciones">Indicaciones</div>
+<div class="cat-btn active" data-cat="Elementos gráficos">Gráficos</div>
+<div class="cat-btn" data-cat="Prototipos">Prototipos</div>
+<div class="cat-btn" data-cat="Indicaciones">Indicaciones</div>
 </div>
 
 <div class="progress-bar">
-  <div class="progress-fill" id="progress"></div>
+<div id="progress" class="progress-fill"></div>
 </div>
-<div class="score" id="score">0%</div>
 
 <div id="checklist"></div>
 
-<div id="liderTools" style="display:none;">
-  <textarea id="observaciones" placeholder="Observaciones"></textarea>
-
-  <input type="file" id="screenshot" multiple>
-  <div id="preview"></div>
 </div>
 
-<button onclick="guardar()">Enviar</button>
+<div id="liderTools" class="card" style="display:none;">
+<label>Observaciones</label>
+<div class="obs-box">
+<textarea id="observaciones"></textarea>
+</div>
 
-<div class="dashboard">
-  <h3>📊 Proyectos</h3>
-  <div id="projects"></div>
+<label>Evidencias</label>
+<input type="file" id="screenshot" multiple>
+<div id="preview"></div>
+</div>
 
-  <h3>🏆 Ranking</h3>
-  <ul id="ranking"></ul>
+<button onclick="guardar()">Enviar revisión</button>
+
+<div id="stats" class="card" style="display:none;">
+<h3>📊 Detalles por diseñador</h3>
+<div id="statsContent"></div>
 </div>
 
 </div>
@@ -194,205 +298,171 @@ button {
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <script>
-(function(){
-  emailjs.init("_v8Luk56bzfinD770");
-})();
+emailjs.init("_v8Luk56bzfinD770");
 
-const API_CHECKLIST = "https://sheetdb.io/api/v1/4myrrapuo10e9?sheet=checklist_base";
-const API_REGISTROS = "https://sheetdb.io/api/v1/4myrrapuo10e9?sheet=registros";
+const API_CHECKLIST="https://sheetdb.io/api/v1/4myrrapuo10e9?sheet=checklist_base";
+const API_REGISTROS="https://sheetdb.io/api/v1/4myrrapuo10e9?sheet=registros";
 
-const userEmails = {
-  "Jess": "jessica@abeha.mx",
-  "QA": "harum@abeha.mx",
-  "Joss Diseñadora": "joselyn@abeha.mx"
+const userEmails={
+"Jess":"jessica@abeha.mx",
+"QA":"harum@abeha.mx",
+"Joss Diseñadora":"joselyn@abeha.mx"
 };
 
-let checklistData = [];
-let activeCats = ["Elementos gráficos"];
-let screenshots = [];
+let checklistData=[],activeCats=["Elementos gráficos"],screenshots=[],startTime=Date.now();
 
-document.getElementById("user").addEventListener("change", function() {
-  document.getElementById("liderTools").style.display =
-    this.value === "Joss" ? "block" : "none";
-});
+/* ROLES */
+user.onchange=e=>{
+const isJoss=e.target.value==="Joss";
+liderTools.style.display=isJoss?"block":"none";
+stats.style.display=isJoss?"block":"none";
+if(isJoss) cargarStats();
+};
 
-document.getElementById("screenshot").addEventListener("change", function(e) {
-  const files = Array.from(e.target.files);
-  screenshots = [];
+/* CLOUDINARY */
+async function uploadToCloudinary(file){
+const fd=new FormData();
+fd.append("file",file);
+fd.append("upload_preset","qa_uploads");
 
-  const preview = document.getElementById("preview");
-  preview.innerHTML = "";
-
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      screenshots.push(event.target.result);
-      preview.innerHTML += `<img src="${event.target.result}" style="max-width:100px; margin:5px;">`;
-    };
-    reader.readAsDataURL(file);
-  });
-});
-
-function renderChecklist() {
-  const container = document.getElementById("checklist");
-  container.innerHTML = "";
-
-  checklistData
-    .filter(item => activeCats.includes(item.categoria))
-    .forEach(item => {
-      container.innerHTML += `
-        <label class="item">
-          <input type="checkbox">
-          <span>${item.item}</span>
-        </label>
-      `;
-    });
-
-  document.querySelectorAll("input[type=checkbox]").forEach(cb => {
-    cb.addEventListener("change", updateProgress);
-  });
+const res=await fetch("https://api.cloudinary.com/v1_1/dwp4o3rue/image/upload",{method:"POST",body:fd});
+const data=await res.json();
+return data.secure_url;
 }
 
-function updateProgress() {
-  const total = document.querySelectorAll("input[type=checkbox]").length;
-  const checked = document.querySelectorAll("input[type=checkbox]:checked").length;
-  const percent = Math.round((checked / total) * 100);
+/* IMÁGENES */
+screenshot.onchange=async e=>{
+screenshots=[];
+preview.innerHTML="Subiendo...";
+for(let file of e.target.files){
+const url=await uploadToCloudinary(file);
+screenshots.push(url);
+preview.innerHTML+=`<img src="${url}">`;
+}
+};
 
-  document.getElementById("progress").style.width = percent + "%";
-  document.getElementById("score").textContent = percent + "%";
+/* CHECKLIST */
+function renderChecklist(){
+checklist.innerHTML="";
+checklistData.filter(i=>activeCats.includes(i.categoria))
+.forEach(i=>{
+checklist.innerHTML+=`
+<label class="item">
+<input type="checkbox" data-error="${i.tipo_error}">
+<span>${i.item}</span>
+</label>`;
+});
+document.querySelectorAll("input[type=checkbox]").forEach(cb=>cb.onchange=updateProgress);
 }
 
-document.querySelectorAll(".cat-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    btn.classList.toggle("active");
-    const cat = btn.dataset.cat;
+function updateProgress(){
+const total=document.querySelectorAll("input[type=checkbox]").length;
+const checked=document.querySelectorAll("input:checked").length;
+progress.style.width=Math.round((checked/total)*100)+"%";
+}
 
-    activeCats = activeCats.includes(cat)
-      ? activeCats.filter(c => c !== cat)
-      : [...activeCats, cat];
-
-    renderChecklist();
-  });
+/* CATS */
+document.querySelectorAll(".cat-btn").forEach(btn=>{
+btn.onclick=()=>{
+btn.classList.toggle("active");
+const cat=btn.dataset.cat;
+activeCats.includes(cat)
+? activeCats=activeCats.filter(c=>c!==cat)
+: activeCats.push(cat);
+renderChecklist();
+};
 });
 
-function guardar() {
-  const user = document.getElementById("user").value;
-  const project = document.getElementById("project").value;
-  const asignado = document.getElementById("asignado").value;
+/* GUARDAR */
+function guardar(){
+const userVal=user.value;
+const projectVal=project.value;
+const asignadoVal=asignado.value;
+const observacionesVal=observaciones.value||"";
+const isJoss=userVal==="Joss";
 
-  const observacionesEl = document.getElementById("observaciones");
-  const observaciones = observacionesEl ? observacionesEl.value : "";
+if(!userVal||!projectVal) return alert("Completa datos");
 
-  const isLider = user === "Joss";
+const checkboxes=document.querySelectorAll("input[type=checkbox]");
+const checked=document.querySelectorAll("input:checked").length;
+const percent=Math.round((checked/checkboxes.length)*100);
 
-  if (!user || !project) {
-    alert("Completa usuario y proyecto");
-    return;
-  }
+/* ERRORES */
+const errores=[];
+checkboxes.forEach(cb=>{if(!cb.checked) errores.push(cb.dataset.error);});
 
-  if (isLider && !asignado) {
-    alert("Selecciona quién hizo el proyecto");
-    return;
-  }
+/* EMAIL */
+if(isJoss){
+const imagesHTML=screenshots.map(u=>`<a href="${u}" target="_blank">Ver evidencia</a>`).join("<br>");
 
-  const total = document.querySelectorAll("input[type=checkbox]").length;
-  const checked = document.querySelectorAll("input[type=checkbox]:checked").length;
-  const percent = Math.round((checked / total) * 100);
+emailjs.send("service_4e3hn9i","template_rmdvpvd",{
+to_email:userEmails[asignadoVal],
+user:userVal,
+percent:String(percent),
+observaciones:observacionesVal,
+images:imagesHTML
+});
+}
 
-  if (!isLider && percent < 80) {
-    alert("Completa el checklist");
-    return;
-  }
-
-  if (isLider && !observaciones) {
-    alert("Agrega observaciones");
-    return;
-  }
-
-  const correo = userEmails[asignado];
-
-  if (isLider && !correo) {
-    alert("No se encontró el correo");
-    return;
-  }
-
-  if (isLider) {
-    const imagesHTML = screenshots.map(img =>
-      `<img src="${img}" style="max-width:100%; margin:10px 0;">`
-    ).join("");
-
-emailjs.send("service_akaao78", "template_riaojci", {
-  to_email: correo,
-  user: user || "Sin usuario",
-  percent: String(percent || 0),
-  observaciones: observaciones || "Sin observaciones",
-  images: imagesHTML || "Sin imágenes"
+/* DB */
+fetch(API_REGISTROS,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+data:[{
+usuario:userVal,
+proyecto:projectVal,
+porcentaje:percent,
+observaciones:observacionesVal,
+screenshots:JSON.stringify(screenshots),
+categorias_usadas:activeCats.join(", "),
+errores:errores.join(", "),
+fecha:new Date().toISOString(),
+tiempo_segundos:Math.round((Date.now()-startTime)/1000)
+}]
 })
-.then(res => {
-  console.log("Correo enviado ✅", res);
-  alert("Correo enviado ✉️");
-})
-.catch(err => {
-  console.error("ERROR REAL:", JSON.stringify(err));
-  alert("Error al enviar correo");
 });
-  }
 
-  fetch(API_REGISTROS, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      data: [{
-        usuario: user,
-        proyecto: project,
-        porcentaje: percent,
-        observaciones: observaciones,
-        screenshots: JSON.stringify(screenshots)
-      }]
-    })
-  })
-  .then(() => {
-    alert("Guardado ✅");
-    if (observacionesEl) observacionesEl.value = "";
-    document.getElementById("preview").innerHTML = "";
-    cargarDashboard();
-  });
+alert("Guardado ✅");
+startTime=Date.now();
 }
 
-function cargarDashboard() {
-  fetch(API_REGISTROS)
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById("projects");
-      container.innerHTML = "";
+/* STATS */
+function cargarStats(){
+fetch(API_REGISTROS).then(r=>r.json()).then(data=>{
+const stats={};
 
-      data.forEach(row => {
-        const imgs = row.screenshots ? JSON.parse(row.screenshots) : [];
+data.forEach(row=>{
+if(row.usuario!=="Joss") return;
+const errs=(row.errores||"").split(", ");
+const key=row.proyecto;
 
-        const imagesHTML = screenshots.map(img =>
-  `<img src="${img}" style="max-width:100%; margin:10px 0; border-radius:6px;" />`
-).join("");
+if(!stats[key]) stats[key]={};
 
-        container.innerHTML += `
-          <div class="card">
-            <strong>${row.proyecto}</strong><br>
-            ${row.usuario} - ${row.porcentaje}%<br>
-            <small>${row.observaciones || ""}</small>
-            <div>${imagesHTML}</div>
-          </div>
-        `;
-      });
-    });
+errs.forEach(e=>{
+if(!e) return;
+if(!stats[key][e]) stats[key][e]=0;
+stats[key][e]++;
+});
+});
+
+statsContent.innerHTML="";
+Object.entries(stats).forEach(([u,errs])=>{
+let html=`<div class="stat-card"><strong>${u}</strong><br>`;
+Object.entries(errs).forEach(([e,c])=>{
+html+=`• ${e}: ${c}<br>`;
+});
+html+="</div>";
+statsContent.innerHTML+=html;
+});
+});
 }
 
-fetch(API_CHECKLIST)
-  .then(res => res.json())
-  .then(data => {
-    checklistData = data;
-    renderChecklist();
-  });
-
-cargarDashboard();
+/* INIT */
+fetch(API_CHECKLIST).then(r=>r.json()).then(d=>{
+checklistData=d;
+renderChecklist();
+});
 </script>
 
 </body>
